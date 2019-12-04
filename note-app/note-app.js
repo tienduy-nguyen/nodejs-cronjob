@@ -7,11 +7,15 @@ const filters = {
 renderNotes(notes, filters);
 document.querySelector('#btnCreateNote').addEventListener('click', function (e) {
     const id = uuidv4();
+    const timestamp = moment().valueOf();
+    console.log(timestamp);
    try {
     notes.push({
         id: id,
         title: '',
-        body: ''
+        body: '',
+        createAt: timestamp,
+        updateAt: timestamp
     });
    } catch (e) {
    }
@@ -28,6 +32,13 @@ document.querySelector('#search-text').addEventListener('input', function (e) {
 document.querySelector('#filter-by').addEventListener('change', function (e) {
     console.log(e.target.value);
 });
+
+window.addEventListener('storage',function(e){
+    if(e.key === 'notes'){
+      notes = JSON.parse(e.newValue);
+      renderNotes(notes)  
+    }
+})
 
 //localStorage: using to store data when the page reloaded
 // localStorage.setItem('location', 'Philadelphia');

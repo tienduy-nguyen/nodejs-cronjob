@@ -83,3 +83,9 @@ function isNullOrWhitespace(input) {
 }
 
 // localStorage.clear()
+
+
+//Generate the last edited message
+const generateLastEdited = function(timestamp){
+    return `Last edited ${moment(timestamp).fromNow()}`;
+}
