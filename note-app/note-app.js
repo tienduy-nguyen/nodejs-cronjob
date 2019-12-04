@@ -6,17 +6,18 @@ const filters = {
 }
 renderNotes(notes, filters);
 document.querySelector('#btnCreateNote').addEventListener('click', function (e) {
+    const id = uuidv4();
    try {
     notes.push({
-        id: uuidv4(),
-        tiles: '',
+        id: id,
+        title: '',
         body: ''
     });
    } catch (e) {
    }
     
     saveNotes(notes);
-    renderNotes(notes, filters);
+    location.assign(`/note-app/edit.html#${id}`);
 });
 
 document.querySelector('#search-text').addEventListener('input', function (e) {
