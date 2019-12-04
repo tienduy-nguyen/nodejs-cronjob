@@ -3,9 +3,7 @@
 //Read existing notes from localStorage
 const getSaveTodos = function () {
 	const todosJSON = localStorage.getItem('todos');
-	if(todosJSON === undefined || todosJSON == null){
-		return [];
-	}
+	if(todosJSON === undefined || todosJSON == null || todosJSON =='null') return [];
 	try{
 		return JSON.parse(todosJSON);
 	} catch(e){
@@ -18,32 +16,50 @@ const saveTodos = function (todos) {
 	localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-//Render application todos based on filters
-const renderTodos = function (todos, filters, isHideCompleted) {
-	const filteredTodos = todos;
-	try {
-		filteredTodos = todos.filter(function (todo) {
-			return todo.text.toLowerCase().includes(filters.searchText.toLowerCase());
-		});
-	} catch (e) {
-	}
+//Remove todo by Id
+const removeTodo = function(id){
 	
-	if (isHideCompleted) {
-		for (var i = filteredTodos.length - 1; i >= 0; --i) {
-			if (filteredTodos[i].completed) {
-				filteredTodos.splice(i, 1);
-			}
+	const todoIndex = todos.findIndex(function(todo){
+		return todo.id === id;
+	})
+	if(todoIndex > -1){
+		todos.splice(todoIndex,1);
+	}
+}
+
+//Toggle the completed value for a given todo
+const toggleTodo = function(id){
+	const todo = todos.find(function(todo){
+		return todo.id === id;
+	})
+	if(todo !== undefined){
+		todo.completed = !todo.completed;
+	}
+}
+
+//Delete all complete
+const deleteCompletedTodos = function(todos){
+	for(let i = todos.length-1;i>=0;--i){
+		if(todos[i].completed){
+			todos.splice(i,1);
 		}
 	}
+	saveTodos(todos);
+	renderTodos(todos,filters);
+}
 
+//Render application todos based on filters
+const renderTodos = function (todos, filters) {
+		const filteredTodos = todos.filter(function (todo) {
+			const searchTextMatch = todo.text.toLowerCase().includes(filters.searchText.toLowerCase());
+			const hideCompleteMatch = !filters.hideCompleted || !todo.completed;
+
+			return searchTextMatch && hideCompleteMatch;
+		});
 	// debugger
-	const incompleteTodos = [];
-	try {
-		incompleteTodos = filteredTodos.filter(function (todo) {
+		const incompleteTodos = filteredTodos.filter(function (todo) {
 			return !todo.completed;
 		});
-	} catch (e) {
-	}
 	
 	document.querySelector('#divTodoList').innerHTML = '';
 	const summary = generateSummaryDOM(incompleteTodos);
@@ -56,26 +72,36 @@ const renderTodos = function (todos, filters, isHideCompleted) {
 	}
 }
 
-
 //Get the DOM elements for an individual note
 const generateTodoDOM = function (todo){
 	const todoEl = document.createElement('div');
 	const checkbox = document.createElement('input');
 	const todoText = document.createElement('span');
 	const removeButton = document.createElement('button');
-
+	
 	//Set up the todo checkbox
 	checkbox.setAttribute('type', 'checkbox');
+	checkbox.checked = todo.completed;
 	todoEl.appendChild(checkbox);
-
+	checkbox.addEventListener('change',function(){
+		toggleTodo(todo.id);
+		saveTodos(todos);
+		renderTodos(todos,filters);
+	})
 	//Setup the todo text
 	todoText.textContent = todo.text;
 	todoEl.appendChild(todoText);
-
+	
 	//Setup the remove button
 	removeButton.textContent = 'x';
 	todoEl.appendChild(removeButton);
-	
+	removeButton.addEventListener('click',function(){
+		removeTodo(todo.id);
+		saveTodos(todos);
+		renderTodos(todos,filters);
+	})
+
+
 	return todoEl;
 }
 
