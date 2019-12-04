@@ -1,8 +1,21 @@
 'use strict'
 
 let notes = getSavedNotes();
+const lastChoice = getSaveChoiceSort();
+const dropdownSort = document.querySelector('#filter-by');
+
+//Change the dropdown option
+for(var i, j = 0; i = dropdownSort.options[j]; ++j) {
+    if(i.value == lastChoice) {
+        dropdownSort.selectedIndex = j;
+        break;
+    }
+    if(j>2) break;
+}
+
 const filters = {
-    searchText: ''
+    searchText: '',
+    sortBy: lastChoice
 }
 renderNotes(notes, filters);
 document.querySelector('#btnCreateNote').addEventListener('click', function (e) {
@@ -29,14 +42,17 @@ document.querySelector('#search-text').addEventListener('input', function (e) {
     renderNotes(notes, filters);
 });
 
-document.querySelector('#filter-by').addEventListener('change', function (e) {
-    console.log(e.target.value);
+dropdownSort.addEventListener('change', function (e) {
+    filters.sortBy = e.target.value;
+    saveChoiceSort(e.target.value);
+    renderNotes(notes,filters);
+
 });
 
 window.addEventListener('storage',function(e){
     if(e.key === 'notes'){
       notes = JSON.parse(e.newValue);
-      renderNotes(notes)  
+      renderNotes(notes, filters)  
     }
 })
 
