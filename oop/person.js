@@ -12,7 +12,10 @@ class Person{
 		});
 		return bio;
 	}
-	setName(fullName) {
+	get fullName(){
+		return `${this.firstName} ${this.lastName}`;
+	}
+	set fullName(fullName) {
 		const names = fullName.split(' ');
 		this.firstName = names[0];
 		this.lastName = names[1];
@@ -21,10 +24,12 @@ class Person{
 
 const myPerson = new Person('Andrew','Mead',27,['Teaching']);
 console.log(myPerson);
+myPerson.fullName = 'A B';
+console.log(myPerson);
+console.log(myPerson.fullName); 
 
-
-const me = new Person('Duy', 'NGUYEN', 26,['Reading','Coding','Programming']);
-console.log(me.getBio());
+// const me = new Person('Duy', 'NGUYEN', 26,['Reading','Coding','Programming']);
+// console.log(me.getBio());
 
 class Employee extends Person{
 	constructor(firstName,lastName,age,position, likes){
