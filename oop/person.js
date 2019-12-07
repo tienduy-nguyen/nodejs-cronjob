@@ -26,3 +26,29 @@ console.log(myPerson);
 const me = new Person('Duy', 'NGUYEN', 26,['Reading','Coding','Programming']);
 console.log(me.getBio());
 
+class Employee extends Person{
+	constructor(firstName,lastName,age,position, likes){
+		super(firstName, lastName,age,likes);
+		this.position = position;
+	}
+	getBio(){
+		return `${this.firstName} ${this.lastName} is a ${this.position}.`
+	}
+	getYearsLeft(){
+		return 65 - this.age;
+	}
+}
+class student extends Person{
+	constructor(firstName,lastName,age,grade, likes){
+		super(firstName, lastName,age,likes);
+		this.grade = grade;
+	}
+	updateGrade(change){
+		this.grade +=change;
+	}
+	getBio(){
+		const status = this.grade >= 70? 'passing' : 'failing';
+		return `${this.firstName} is ${status} the class.`;
+	}
+}
+
