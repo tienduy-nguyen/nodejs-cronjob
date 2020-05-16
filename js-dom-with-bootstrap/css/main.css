@@ -1,0 +1,12 @@
+:root{
+    --mainPink: #f46194;
+    --mainGreen: #84bc9c;
+}
+
+body{
+    font-family: 'Charm', cursive;
+    color: var(--mainPink);
+}
+h1{
+    color: var(--mainGreen)
+}
