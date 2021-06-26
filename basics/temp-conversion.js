@@ -1,1 +1,0 @@
-let fahrenheit = 32
